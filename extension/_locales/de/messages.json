@@ -1,0 +1,131 @@
+{
+  "extName": {
+    "message": "OffMic"
+  },
+  "extDescription": {
+    "message": "Privater Team-Sprachkanal während einer Teams-Besprechung, gesteuert vom Status Ihres Teams-Mikrofons."
+  },
+  "actionTitle": {
+    "message": "OffMic"
+  },
+  "actionTitleConnected": {
+    "message": "OffMic (verbunden)"
+  },
+  "labelTheme": {
+    "message": "Darstellung"
+  },
+  "themeAuto": {
+    "message": "Automatisch (Browser-Design)"
+  },
+  "themeLight": {
+    "message": "Hell"
+  },
+  "themeDark": {
+    "message": "Dunkel"
+  },
+  "labelServer": {
+    "message": "Server"
+  },
+  "labelTeamCode": {
+    "message": "Team-Code"
+  },
+  "labelName": {
+    "message": "Name"
+  },
+  "placeholderName": {
+    "message": "Ihr Name"
+  },
+  "listenLabel": {
+    "message": "Team hören, auch wenn das Teams-Mikrofon aktiv ist"
+  },
+  "btnConnect": {
+    "message": "Verbinden"
+  },
+  "btnDisconnect": {
+    "message": "Trennen"
+  },
+  "btnGrantMic": {
+    "message": "Mikrofonzugriff erlauben"
+  },
+  "settingsTitle": {
+    "message": "Einstellungen"
+  },
+  "labelLanguage": {
+    "message": "Sprache"
+  },
+  "languageAuto": {
+    "message": "Automatisch (Browsersprache)"
+  },
+  "stateDisconnected": {
+    "message": "Nicht verbunden."
+  },
+  "stateConnecting": {
+    "message": "Verbinden..."
+  },
+  "stateConnected": {
+    "message": "Mit Raum {room} verbunden"
+  },
+  "talkTeam": {
+    "message": "Teams-Mikrofon stumm: Sie sprechen mit Ihrem Team."
+  },
+  "talkClient": {
+    "message": "Teams-Mikrofon aktiv: Sie sprechen mit dem Kunden."
+  },
+  "noPeers": {
+    "message": "Keine Teamkollegen verbunden."
+  },
+  "peerAnonymous": {
+    "message": "Anonym"
+  },
+  "peerStateUnknown": {
+    "message": "unbekannt"
+  },
+  "hintHeadset": {
+    "message": "Tipp: Tragen Sie ein Headset, damit nichts zum Kunden durchdringt."
+  },
+  "errRequiredFields": {
+    "message": "Server, Team-Code und Name sind erforderlich."
+  },
+  "errMicPermission": {
+    "message": "Der Mikrofonzugriff ist für die Erweiterung blockiert. Einmalig erlauben und erneut verbinden."
+  },
+  "errMicMissing": {
+    "message": "Kein Mikrofon auf diesem Gerät gefunden."
+  },
+  "errMicFailed": {
+    "message": "Das Mikrofon konnte nicht geöffnet werden. Möglicherweise wird es von einer anderen App verwendet."
+  },
+  "errBadServerUrl": {
+    "message": "Ungültige Server-URL. Sie muss mit ws:// oder wss:// beginnen."
+  },
+  "errServerUnreachable": {
+    "message": "Signalisierungsserver nicht erreichbar. Läuft er unter dieser Adresse?"
+  },
+  "permPageTitle": {
+    "message": "Mikrofonzugriff für OffMic"
+  },
+  "permHeading": {
+    "message": "Mikrofonzugriff"
+  },
+  "permIntro": {
+    "message": "OffMic nimmt Ihr Mikrofon über ein Hintergrunddokument auf. Dieses hat keine Oberfläche und kann daher selbst keine Berechtigung anfragen. Erteilen Sie den Zugriff hier einmalig, Chrome merkt ihn sich für die Erweiterung."
+  },
+  "permGranted": {
+    "message": "Zugriff erteilt. Öffnen Sie das OffMic-Popup und klicken Sie auf Verbinden."
+  },
+  "permDenied": {
+    "message": "Zugriff verweigert. Öffnen Sie das Schloss in der Adressleiste, erlauben Sie das Mikrofon und versuchen Sie es erneut."
+  },
+  "permFailed": {
+    "message": "Mikrofon nicht verfügbar: {error}"
+  },
+  "permCloseHint": {
+    "message": "Sie können diesen Tab schließen, sobald der Zugriff erteilt ist."
+  },
+  "errOffscreenFailed": {
+    "message": "Interner Fehler: Das Mikrofon-Dokument konnte nicht starten. Lade die Erweiterung neu."
+  },
+  "errNoResponse": {
+    "message": "Keine Antwort der Erweiterung. Lade sie unter chrome://extensions neu und versuche es erneut."
+  }
+}

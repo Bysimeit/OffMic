@@ -1,0 +1,131 @@
+{
+  "extName": {
+    "message": "OffMic"
+  },
+  "extDescription": {
+    "message": "Private team voice channel during a Teams meeting, driven by your Teams microphone state."
+  },
+  "actionTitle": {
+    "message": "OffMic"
+  },
+  "actionTitleConnected": {
+    "message": "OffMic (connected)"
+  },
+  "labelTheme": {
+    "message": "Appearance"
+  },
+  "themeAuto": {
+    "message": "Automatic (browser theme)"
+  },
+  "themeLight": {
+    "message": "Light"
+  },
+  "themeDark": {
+    "message": "Dark"
+  },
+  "labelServer": {
+    "message": "Server"
+  },
+  "labelTeamCode": {
+    "message": "Team code"
+  },
+  "labelName": {
+    "message": "Name"
+  },
+  "placeholderName": {
+    "message": "Your name"
+  },
+  "listenLabel": {
+    "message": "Listen to the team even when the Teams mic is live"
+  },
+  "btnConnect": {
+    "message": "Connect"
+  },
+  "btnDisconnect": {
+    "message": "Disconnect"
+  },
+  "btnGrantMic": {
+    "message": "Grant microphone access"
+  },
+  "settingsTitle": {
+    "message": "Settings"
+  },
+  "labelLanguage": {
+    "message": "Language"
+  },
+  "languageAuto": {
+    "message": "Automatic (browser language)"
+  },
+  "stateDisconnected": {
+    "message": "Disconnected."
+  },
+  "stateConnecting": {
+    "message": "Connecting..."
+  },
+  "stateConnected": {
+    "message": "Connected to room {room}"
+  },
+  "talkTeam": {
+    "message": "Teams mic muted: you are talking to your team."
+  },
+  "talkClient": {
+    "message": "Teams mic live: you are talking to the client."
+  },
+  "noPeers": {
+    "message": "No teammate connected."
+  },
+  "peerAnonymous": {
+    "message": "Anonymous"
+  },
+  "peerStateUnknown": {
+    "message": "unknown"
+  },
+  "hintHeadset": {
+    "message": "Tip: wear a headset to avoid any leak to the client."
+  },
+  "errRequiredFields": {
+    "message": "Server, team code and name are required."
+  },
+  "errMicPermission": {
+    "message": "Microphone access is blocked for the extension. Grant it once, then connect again."
+  },
+  "errMicMissing": {
+    "message": "No microphone found on this machine."
+  },
+  "errMicFailed": {
+    "message": "The microphone could not be opened. Another app may be using it."
+  },
+  "errBadServerUrl": {
+    "message": "Invalid server URL. It must start with ws:// or wss://"
+  },
+  "errServerUnreachable": {
+    "message": "Cannot reach the signaling server. Is it running at that address?"
+  },
+  "permPageTitle": {
+    "message": "OffMic microphone access"
+  },
+  "permHeading": {
+    "message": "Microphone access"
+  },
+  "permIntro": {
+    "message": "OffMic captures your microphone from a background document, which has no interface and therefore cannot show a permission prompt. Grant access once here and Chrome will remember it for the extension."
+  },
+  "permGranted": {
+    "message": "Access granted. Open the OffMic popup and click Connect."
+  },
+  "permDenied": {
+    "message": "Access denied. Open the padlock in the address bar and allow the microphone, then try again."
+  },
+  "permFailed": {
+    "message": "Microphone unavailable: {error}"
+  },
+  "permCloseHint": {
+    "message": "You can close this tab once access is granted."
+  },
+  "errOffscreenFailed": {
+    "message": "Internal error: the microphone document could not start. Reload the extension."
+  },
+  "errNoResponse": {
+    "message": "No response from the extension. Reload it from chrome://extensions, then try again."
+  }
+}

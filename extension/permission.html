@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" data-i18n-title-key="permPageTitle">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OffMic microphone access</title>
+    <link rel="stylesheet" href="permission.css" />
+  </head>
+  <body>
+    <main>
+      <h1 data-i18n="permHeading">Microphone access</h1>
+      <p data-i18n="permIntro">
+        OffMic captures your microphone from a background document, which has no
+        interface and therefore cannot show a permission prompt. Grant access
+        once here and Chrome will remember it for the extension.
+      </p>
+      <button id="grantBtn" data-i18n="btnGrantMic">Grant microphone access</button>
+      <p id="result" class="result"></p>
+      <p class="hint" data-i18n="permCloseHint">You can close this tab once access is granted.</p>
+    </main>
+    <script src="theme.js"></script>
+    <script src="i18n.js"></script>
+    <script src="permission.js"></script>
+  </body>
+</html>

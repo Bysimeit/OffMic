@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <h1>OffMic</h1>
+      <div class="header-tools">
+        <span id="dot" class="dot"></span>
+        <button id="settingsBtn" class="icon-button" data-i18n-title="settingsTitle" title="Settings">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M19.14 12.94a7.07 7.07 0 0 0 0-1.88l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.3 7.3 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.58.24-1.13.55-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.65 8.84a.5.5 0 0 0 .12.64l2.03 1.58a7.07 7.07 0 0 0 0 1.88l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.31.6.22l2.39-.96c.5.39 1.05.7 1.63.94l.36 2.54c.04.24.25.42.5.42h3.84c.25 0 .46-.18.5-.42l.36-2.54c.58-.24 1.13-.55 1.63-.94l2.39.96c.22.09.47 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64ZM12 15.6A3.6 3.6 0 1 1 12 8.4a3.6 3.6 0 0 1 0 7.2Z"
+            />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <section id="settings" hidden>
+      <label>
+        <span data-i18n="labelLanguage">Language</span>
+        <select id="language">
+          <option value="auto" data-i18n="languageAuto">Automatic (browser language)</option>
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+          <option value="nl">Nederlands</option>
+          <option value="de">Deutsch</option>
+          <option value="es">Español</option>
+        </select>
+      </label>
+      <label>
+        <span data-i18n="labelTheme">Appearance</span>
+        <select id="theme">
+          <option value="auto" data-i18n="themeAuto">Automatic (browser theme)</option>
+          <option value="light" data-i18n="themeLight">Light</option>
+          <option value="dark" data-i18n="themeDark">Dark</option>
+        </select>
+      </label>
+    </section>
+
+    <section id="setup">
+      <label>
+        <span data-i18n="labelServer">Server</span>
+        <input id="serverUrl" type="text" placeholder="ws://localhost:48085" />
+      </label>
+      <label>
+        <span data-i18n="labelTeamCode">Team code</span>
+        <input id="room" type="text" placeholder="team-alpha" />
+      </label>
+      <label>
+        <span data-i18n="labelName">Name</span>
+        <input id="name" type="text" data-i18n-placeholder="placeholderName" placeholder="Your name" />
+      </label>
+    </section>
+
+    <section id="controls">
+      <label class="switch">
+        <input id="listen" type="checkbox" checked />
+        <span data-i18n="listenLabel">Listen to the team even when the Teams mic is live</span>
+      </label>
+      <button id="connectBtn" data-i18n="btnConnect">Connect</button>
+      <button id="disconnectBtn" class="secondary" data-i18n="btnDisconnect" hidden>Disconnect</button>
+    </section>
+
+    <section id="status">
+      <p id="stateLine" class="muted" data-i18n="stateDisconnected">Disconnected.</p>
+      <p id="errorLine" class="error" hidden></p>
+      <button id="grantBtn" class="secondary" data-i18n="btnGrantMic" hidden>Grant microphone access</button>
+      <p id="talkLine"></p>
+      <ul id="peers"></ul>
+    </section>
+
+    <p class="hint" data-i18n="hintHeadset">Tip: wear a headset to avoid any leak to the client.</p>
+
+    <script src="../config.js"></script>
+    <script src="../theme.js"></script>
+    <script src="../i18n.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

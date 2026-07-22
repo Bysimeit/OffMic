@@ -1,0 +1,191 @@
+:root {
+  color-scheme: light dark;
+  --accent: #4f6bed;
+  --ok: #2f9e44;
+  --warn: #e8590c;
+  --muted: #8a8f98;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 300px;
+  margin: 0;
+  padding: 14px;
+  background: Canvas;
+  color: CanvasText;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-size: 13px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+h1 {
+  font-size: 16px;
+  margin: 0;
+}
+
+.header-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.icon-button {
+  width: auto;
+  padding: 2px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.icon-button:hover {
+  color: inherit;
+}
+
+#settings {
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--muted);
+}
+
+select {
+  width: 100%;
+  padding: 6px 8px;
+  margin-top: 3px;
+  border: 1px solid var(--muted);
+  border-radius: 6px;
+  background: Field;
+  color: FieldText;
+  font: inherit;
+}
+
+option {
+  background: Field;
+  color: FieldText;
+}
+
+.dot.on {
+  background: var(--ok);
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 6px 8px;
+  margin-top: 3px;
+  border: 1px solid var(--muted);
+  border-radius: 6px;
+  background: Field;
+  color: FieldText;
+}
+
+input[type="text"]::placeholder {
+  color: var(--muted);
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.switch input {
+  width: auto;
+}
+
+button {
+  width: 100%;
+  padding: 9px;
+  border: none;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: transparent;
+  border: 1px solid var(--muted);
+  color: inherit;
+}
+
+#status {
+  margin-top: 12px;
+  border-top: 1px solid var(--muted);
+  padding-top: 10px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+#errorLine {
+  color: var(--warn);
+  font-weight: 600;
+  margin: 6px 0;
+}
+
+#grantBtn {
+  margin-bottom: 6px;
+}
+
+#talkLine {
+  font-weight: 600;
+  margin: 6px 0;
+}
+
+.talk-team {
+  color: var(--ok);
+}
+
+.talk-client {
+  color: var(--warn);
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0;
+}
+
+li {
+  padding: 3px 0;
+}
+
+.hint {
+  margin-top: 12px;
+  font-size: 11px;
+  color: var(--muted);
+}

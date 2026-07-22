@@ -1,0 +1,131 @@
+{
+  "extName": {
+    "message": "OffMic"
+  },
+  "extDescription": {
+    "message": "Privékanaal voor je team tijdens een Teams-vergadering, aangestuurd door de status van je Teams-microfoon."
+  },
+  "actionTitle": {
+    "message": "OffMic"
+  },
+  "actionTitleConnected": {
+    "message": "OffMic (verbonden)"
+  },
+  "labelTheme": {
+    "message": "Weergave"
+  },
+  "themeAuto": {
+    "message": "Automatisch (browserthema)"
+  },
+  "themeLight": {
+    "message": "Licht"
+  },
+  "themeDark": {
+    "message": "Donker"
+  },
+  "labelServer": {
+    "message": "Server"
+  },
+  "labelTeamCode": {
+    "message": "Teamcode"
+  },
+  "labelName": {
+    "message": "Naam"
+  },
+  "placeholderName": {
+    "message": "Je naam"
+  },
+  "listenLabel": {
+    "message": "Naar het team luisteren, ook als de Teams-microfoon aanstaat"
+  },
+  "btnConnect": {
+    "message": "Verbinden"
+  },
+  "btnDisconnect": {
+    "message": "Verbinding verbreken"
+  },
+  "btnGrantMic": {
+    "message": "Microfoontoegang geven"
+  },
+  "settingsTitle": {
+    "message": "Instellingen"
+  },
+  "labelLanguage": {
+    "message": "Taal"
+  },
+  "languageAuto": {
+    "message": "Automatisch (browsertaal)"
+  },
+  "stateDisconnected": {
+    "message": "Niet verbonden."
+  },
+  "stateConnecting": {
+    "message": "Verbinden..."
+  },
+  "stateConnected": {
+    "message": "Verbonden met room {room}"
+  },
+  "talkTeam": {
+    "message": "Teams-microfoon uit: je praat met je team."
+  },
+  "talkClient": {
+    "message": "Teams-microfoon aan: je praat met de klant."
+  },
+  "noPeers": {
+    "message": "Geen teamgenoten verbonden."
+  },
+  "peerAnonymous": {
+    "message": "Anoniem"
+  },
+  "peerStateUnknown": {
+    "message": "onbekend"
+  },
+  "hintHeadset": {
+    "message": "Tip: draag een headset om lekken naar de klant te voorkomen."
+  },
+  "errRequiredFields": {
+    "message": "Server, teamcode en naam zijn verplicht."
+  },
+  "errMicPermission": {
+    "message": "Microfoontoegang is geblokkeerd voor de extensie. Geef eenmalig toestemming en verbind opnieuw."
+  },
+  "errMicMissing": {
+    "message": "Geen microfoon gevonden op deze machine."
+  },
+  "errMicFailed": {
+    "message": "De microfoon kon niet worden geopend. Mogelijk gebruikt een andere app hem."
+  },
+  "errBadServerUrl": {
+    "message": "Ongeldige server-URL. Deze moet beginnen met ws:// of wss://"
+  },
+  "errServerUnreachable": {
+    "message": "Signaleringsserver niet bereikbaar. Draait hij op dat adres?"
+  },
+  "permPageTitle": {
+    "message": "Microfoontoegang voor OffMic"
+  },
+  "permHeading": {
+    "message": "Microfoontoegang"
+  },
+  "permIntro": {
+    "message": "OffMic legt je microfoon vast vanuit een achtergronddocument. Dat heeft geen interface en kan dus zelf geen toestemming vragen. Geef hier eenmalig toegang, Chrome onthoudt dit voor de extensie."
+  },
+  "permGranted": {
+    "message": "Toegang verleend. Open de OffMic-pop-up en klik op Verbinden."
+  },
+  "permDenied": {
+    "message": "Toegang geweigerd. Open het slotje in de adresbalk, sta de microfoon toe en probeer het opnieuw."
+  },
+  "permFailed": {
+    "message": "Microfoon niet beschikbaar: {error}"
+  },
+  "permCloseHint": {
+    "message": "Je kunt dit tabblad sluiten zodra de toegang is verleend."
+  },
+  "errOffscreenFailed": {
+    "message": "Interne fout: het microfoondocument kon niet starten. Herlaad de extensie."
+  },
+  "errNoResponse": {
+    "message": "Geen antwoord van de extensie. Herlaad ze via chrome://extensions en probeer opnieuw."
+  }
+}

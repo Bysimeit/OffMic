@@ -1,0 +1,131 @@
+{
+  "extName": {
+    "message": "OffMic"
+  },
+  "extDescription": {
+    "message": "Canal vocal privé d'équipe pendant une réunion Teams, piloté par l'état de votre micro Teams."
+  },
+  "actionTitle": {
+    "message": "OffMic"
+  },
+  "actionTitleConnected": {
+    "message": "OffMic (connecté)"
+  },
+  "labelTheme": {
+    "message": "Apparence"
+  },
+  "themeAuto": {
+    "message": "Automatique (thème du navigateur)"
+  },
+  "themeLight": {
+    "message": "Clair"
+  },
+  "themeDark": {
+    "message": "Sombre"
+  },
+  "labelServer": {
+    "message": "Serveur"
+  },
+  "labelTeamCode": {
+    "message": "Code d'équipe"
+  },
+  "labelName": {
+    "message": "Nom"
+  },
+  "placeholderName": {
+    "message": "Votre nom"
+  },
+  "listenLabel": {
+    "message": "Écouter l'équipe même quand le micro Teams est actif"
+  },
+  "btnConnect": {
+    "message": "Se connecter"
+  },
+  "btnDisconnect": {
+    "message": "Se déconnecter"
+  },
+  "btnGrantMic": {
+    "message": "Autoriser le micro"
+  },
+  "settingsTitle": {
+    "message": "Paramètres"
+  },
+  "labelLanguage": {
+    "message": "Langue"
+  },
+  "languageAuto": {
+    "message": "Automatique (langue du navigateur)"
+  },
+  "stateDisconnected": {
+    "message": "Déconnecté."
+  },
+  "stateConnecting": {
+    "message": "Connexion..."
+  },
+  "stateConnected": {
+    "message": "Connecté à la room {room}"
+  },
+  "talkTeam": {
+    "message": "Micro Teams coupé : vous parlez à votre équipe."
+  },
+  "talkClient": {
+    "message": "Micro Teams actif : vous parlez au client."
+  },
+  "noPeers": {
+    "message": "Aucun coéquipier connecté."
+  },
+  "peerAnonymous": {
+    "message": "Anonyme"
+  },
+  "peerStateUnknown": {
+    "message": "inconnu"
+  },
+  "hintHeadset": {
+    "message": "Astuce : portez un casque pour éviter toute fuite vers le client."
+  },
+  "errRequiredFields": {
+    "message": "Le serveur, le code d'équipe et le nom sont obligatoires."
+  },
+  "errMicPermission": {
+    "message": "L'accès au micro est bloqué pour l'extension. Autorisez-le une fois, puis reconnectez-vous."
+  },
+  "errMicMissing": {
+    "message": "Aucun micro détecté sur cette machine."
+  },
+  "errMicFailed": {
+    "message": "Le micro n'a pas pu être ouvert. Une autre application l'utilise peut-être."
+  },
+  "errBadServerUrl": {
+    "message": "URL de serveur invalide. Elle doit commencer par ws:// ou wss://"
+  },
+  "errServerUnreachable": {
+    "message": "Serveur de signalisation injoignable. Tourne-t-il bien à cette adresse ?"
+  },
+  "permPageTitle": {
+    "message": "Accès au micro pour OffMic"
+  },
+  "permHeading": {
+    "message": "Accès au micro"
+  },
+  "permIntro": {
+    "message": "OffMic capte votre micro depuis un document d'arrière-plan, qui n'a aucune interface et ne peut donc pas afficher de demande d'autorisation. Accordez l'accès une seule fois ici, Chrome le retiendra pour l'extension."
+  },
+  "permGranted": {
+    "message": "Accès accordé. Ouvrez le popup OffMic et cliquez sur Se connecter."
+  },
+  "permDenied": {
+    "message": "Accès refusé. Ouvrez le cadenas dans la barre d'adresse, autorisez le micro, puis réessayez."
+  },
+  "permFailed": {
+    "message": "Micro indisponible : {error}"
+  },
+  "permCloseHint": {
+    "message": "Vous pouvez fermer cet onglet une fois l'accès accordé."
+  },
+  "errOffscreenFailed": {
+    "message": "Erreur interne : le document micro n'a pas pu démarrer. Recharge l'extension."
+  },
+  "errNoResponse": {
+    "message": "Pas de réponse de l'extension. Recharge-la depuis chrome://extensions, puis réessaie."
+  }
+}

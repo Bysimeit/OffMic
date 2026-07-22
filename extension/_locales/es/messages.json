@@ -1,0 +1,131 @@
+{
+  "extName": {
+    "message": "OffMic"
+  },
+  "extDescription": {
+    "message": "Canal de voz privado para tu equipo durante una reunión de Teams, controlado por el estado de tu micrófono de Teams."
+  },
+  "actionTitle": {
+    "message": "OffMic"
+  },
+  "actionTitleConnected": {
+    "message": "OffMic (conectado)"
+  },
+  "labelTheme": {
+    "message": "Apariencia"
+  },
+  "themeAuto": {
+    "message": "Automático (tema del navegador)"
+  },
+  "themeLight": {
+    "message": "Claro"
+  },
+  "themeDark": {
+    "message": "Oscuro"
+  },
+  "labelServer": {
+    "message": "Servidor"
+  },
+  "labelTeamCode": {
+    "message": "Código de equipo"
+  },
+  "labelName": {
+    "message": "Nombre"
+  },
+  "placeholderName": {
+    "message": "Tu nombre"
+  },
+  "listenLabel": {
+    "message": "Escuchar al equipo aunque el micrófono de Teams esté activo"
+  },
+  "btnConnect": {
+    "message": "Conectar"
+  },
+  "btnDisconnect": {
+    "message": "Desconectar"
+  },
+  "btnGrantMic": {
+    "message": "Permitir el micrófono"
+  },
+  "settingsTitle": {
+    "message": "Ajustes"
+  },
+  "labelLanguage": {
+    "message": "Idioma"
+  },
+  "languageAuto": {
+    "message": "Automático (idioma del navegador)"
+  },
+  "stateDisconnected": {
+    "message": "Desconectado."
+  },
+  "stateConnecting": {
+    "message": "Conectando..."
+  },
+  "stateConnected": {
+    "message": "Conectado a la sala {room}"
+  },
+  "talkTeam": {
+    "message": "Micrófono de Teams silenciado: hablas con tu equipo."
+  },
+  "talkClient": {
+    "message": "Micrófono de Teams activo: hablas con el cliente."
+  },
+  "noPeers": {
+    "message": "Ningún compañero conectado."
+  },
+  "peerAnonymous": {
+    "message": "Anónimo"
+  },
+  "peerStateUnknown": {
+    "message": "desconocido"
+  },
+  "hintHeadset": {
+    "message": "Consejo: usa auriculares para evitar cualquier fuga hacia el cliente."
+  },
+  "errRequiredFields": {
+    "message": "El servidor, el código de equipo y el nombre son obligatorios."
+  },
+  "errMicPermission": {
+    "message": "El acceso al micrófono está bloqueado para la extensión. Concédelo una vez y vuelve a conectar."
+  },
+  "errMicMissing": {
+    "message": "No se ha encontrado ningún micrófono en este equipo."
+  },
+  "errMicFailed": {
+    "message": "No se ha podido abrir el micrófono. Puede que otra aplicación lo esté usando."
+  },
+  "errBadServerUrl": {
+    "message": "URL de servidor no válida. Debe empezar por ws:// o wss://"
+  },
+  "errServerUnreachable": {
+    "message": "No se puede contactar con el servidor de señalización. ¿Está funcionando en esa dirección?"
+  },
+  "permPageTitle": {
+    "message": "Acceso al micrófono para OffMic"
+  },
+  "permHeading": {
+    "message": "Acceso al micrófono"
+  },
+  "permIntro": {
+    "message": "OffMic captura tu micrófono desde un documento en segundo plano, que no tiene interfaz y por tanto no puede mostrar una solicitud de permiso. Concede el acceso una sola vez aquí y Chrome lo recordará para la extensión."
+  },
+  "permGranted": {
+    "message": "Acceso concedido. Abre la ventana de OffMic y haz clic en Conectar."
+  },
+  "permDenied": {
+    "message": "Acceso denegado. Abre el candado de la barra de direcciones, permite el micrófono e inténtalo de nuevo."
+  },
+  "permFailed": {
+    "message": "Micrófono no disponible: {error}"
+  },
+  "permCloseHint": {
+    "message": "Puedes cerrar esta pestaña una vez concedido el acceso."
+  },
+  "errOffscreenFailed": {
+    "message": "Error interno: el documento de micrófono no pudo iniciarse. Vuelve a cargar la extensión."
+  },
+  "errNoResponse": {
+    "message": "La extensión no responde. Vuelve a cargarla desde chrome://extensions e inténtalo de nuevo."
+  }
+}
