@@ -1,11 +1,52 @@
+import { createServer } from "node:http";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 import { WebSocketServer } from "ws";
 
 const PORT = Number(process.env.PORT) || 48085;
 const HOST = process.env.HOST || "";
-const options = { port: PORT };
-if (HOST) options.host = HOST;
-const wss = new WebSocketServer(options);
+const SITE = process.env.SITE_URL || "https://offmic.xeron.be";
 const rooms = new Map();
+
+const landing = readFileSync(
+  join(dirname(fileURLToPath(import.meta.url)), "landing.html")
+);
+
+const robots = `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`;
+
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>${SITE}/</loc></url>
+</urlset>
+`;
+
+const server = createServer((req, res) => {
+  const path = (req.url || "/").split("?")[0];
+
+  if (req.method === "GET" && path === "/robots.txt") {
+    res.writeHead(200, { "content-type": "text/plain; charset=utf-8" });
+    res.end(robots);
+    return;
+  }
+
+  if (req.method === "GET" && path === "/sitemap.xml") {
+    res.writeHead(200, { "content-type": "application/xml; charset=utf-8" });
+    res.end(sitemap);
+    return;
+  }
+
+  if (req.method === "GET" && (req.headers.accept || "").includes("text/html")) {
+    res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
+    res.end(landing);
+    return;
+  }
+
+  res.writeHead(200, { "content-type": "text/plain; charset=utf-8" });
+  res.end("OffMic signaling OK\n");
+});
+
+const wss = new WebSocketServer({ server });
 
 function roomSet(room) {
   if (!rooms.has(room)) rooms.set(room, new Map());
@@ -82,4 +123,9 @@ wss.on("connection", (ws) => {
   ws.on("error", () => onLeave(ws));
 });
 
-console.log(`OffMic signaling server listening on port ${PORT}`);
+if (HOST) server.listen(PORT, HOST);
+else server.listen(PORT);
+
+server.on("listening", () => {
+  console.log(`OffMic signaling server listening on port ${PORT}`);
+});
