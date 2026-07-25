@@ -21,9 +21,13 @@ const SELECTORS = [
   "#microphone-button",
   '[data-tid="toggle-mute"]',
   '[data-tid="microphone-button"]',
+  '[data-inp="microphone-button"]',
   'button[aria-label*="micro" i]',
   'button[title*="micro" i]'
 ];
+
+const STATE_MUTED = ["mic-off", "muted"];
+const STATE_UNMUTED = ["mic-on", "unmuted"];
 
 function findMicButton() {
   for (const selector of SELECTORS) {
@@ -36,6 +40,11 @@ function findMicButton() {
 function readMuted() {
   const btn = findMicButton();
   if (!btn) return null;
+
+  const state = (btn.getAttribute("data-state") || "").trim().toLowerCase();
+  if (STATE_MUTED.includes(state)) return true;
+  if (STATE_UNMUTED.includes(state)) return false;
+
   const label = (
     (btn.getAttribute("aria-label") || "") + " " + (btn.getAttribute("title") || "")
   ).toLowerCase();
@@ -69,7 +78,7 @@ observer.observe(document.documentElement, {
   subtree: true,
   childList: true,
   attributes: true,
-  attributeFilter: ["aria-label", "title", "data-tid"]
+  attributeFilter: ["aria-label", "title", "data-tid", "data-state"]
 });
 
 setInterval(poll, 1500);

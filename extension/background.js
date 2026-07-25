@@ -99,6 +99,21 @@ function toOffscreen(cmd, extra) {
   chrome.runtime.sendMessage(Object.assign({ target: "offscreen", cmd }, extra || {}));
 }
 
+const TEAMS_URLS = [
+  "https://teams.microsoft.com/*",
+  "https://teams.live.com/*",
+  "https://teams.cloud.microsoft/*"
+];
+
+function syncMuteState() {
+  chrome.tabs.query({ url: TEAMS_URLS }, (tabs) => {
+    if (chrome.runtime.lastError || !tabs) return;
+    for (const tab of tabs) {
+      chrome.tabs.sendMessage(tab.id, { cmd: "requestMuteState" }, () => chrome.runtime.lastError);
+    }
+  });
+}
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg || !msg.cmd) return;
 
@@ -106,6 +121,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     ensureOffscreen()
       .then(() => {
         toOffscreen("connect", { payload: msg.payload });
+        syncMuteState();
       })
       .catch((e) => {
         console.error("OffMic: offscreen document unavailable", e);
@@ -133,6 +149,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
   if (msg.cmd === "getStatus") {
     toOffscreen("getStatus");
+    syncMuteState();
     sendResponse(lastStatus);
     return true;
   }
