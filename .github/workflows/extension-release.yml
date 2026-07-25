@@ -1,0 +1,96 @@
+name: Build extension
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'server/**'
+      - '.github/workflows/signaling-image.yml'
+      - '**/*.md'
+      - '.idea/**'
+      - '.gitignore'
+      - 'LICENSE'
+  workflow_dispatch:
+    inputs:
+      official:
+        description: 'Publish an official versioned release (otherwise latest build)'
+        type: boolean
+        default: false
+      prerelease:
+        description: 'If official, mark it as a pre-release'
+        type: boolean
+        default: false
+
+permissions: {}
+
+concurrency:
+  group: extension-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.version.outputs.value }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+
+      - run: node tools/check-locales.mjs
+
+      - id: version
+        run: echo "value=$(node -p "require('./extension/manifest.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Package the extension
+        run: |
+          (cd extension && zip -qr ../offmic.zip .)
+          sha256sum offmic.zip > offmic.zip.sha256
+          unzip -l offmic.zip
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: extension
+          path: |
+            offmic.zip
+            offmic.zip.sha256
+          if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ needs.build.outputs.version }}
+          RUN_NUMBER: ${{ github.run_number }}
+          OFFICIAL: ${{ github.event_name == 'workflow_dispatch' && inputs.official }}
+          PRERELEASE: ${{ inputs.prerelease }}
+        working-directory: dist
+        run: |
+          files=(offmic.zip offmic.zip.sha256)
+          if [ "$OFFICIAL" = "true" ]; then
+            flags=""
+            [ "$PRERELEASE" = "true" ] && flags="--prerelease"
+            gh release create "v$VERSION" "${files[@]}" \
+              --title "OffMic $VERSION" --generate-notes $flags
+          else
+            gh release delete latest --yes --cleanup-tag || true
+            gh release create latest "${files[@]}" \
+              --title "Latest build ($VERSION, build $RUN_NUMBER)" \
+              --notes "" --prerelease
+          fi
