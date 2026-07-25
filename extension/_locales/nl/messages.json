@@ -23,6 +23,30 @@
   "themeDark": {
     "message": "Donker"
   },
+  "labelMicDevice": {
+    "message": "Microfoon"
+  },
+  "labelSpeakerDevice": {
+    "message": "Audio-uitvoer"
+  },
+  "labelMicVolume": {
+    "message": "Microfoonvolume"
+  },
+  "labelTeamVolume": {
+    "message": "Teamvolume"
+  },
+  "deviceDefault": {
+    "message": "Systeemstandaard"
+  },
+  "deviceFallbackInput": {
+    "message": "Microfoon {index}"
+  },
+  "deviceFallbackOutput": {
+    "message": "Uitvoer {index}"
+  },
+  "hintDevices": {
+    "message": "Geef microfoontoegang om je audioapparaten te tonen."
+  },
   "labelServer": {
     "message": "Server"
   },
@@ -77,8 +101,35 @@
   "peerAnonymous": {
     "message": "Anoniem"
   },
+  "peerMute": {
+    "message": "{name} dempen"
+  },
+  "peerUnmute": {
+    "message": "{name} weer inschakelen"
+  },
+  "peerVolume": {
+    "message": "Volume van {name}"
+  },
   "peerStateUnknown": {
     "message": "onbekend"
+  },
+  "peerStateNew": {
+    "message": "starten"
+  },
+  "peerStateConnecting": {
+    "message": "verbinden"
+  },
+  "peerStateConnected": {
+    "message": "online"
+  },
+  "peerStateDisconnected": {
+    "message": "offline"
+  },
+  "peerStateFailed": {
+    "message": "mislukt"
+  },
+  "peerStateClosed": {
+    "message": "gesloten"
   },
   "hintHeadset": {
     "message": "Tip: draag een headset om lekken naar de klant te voorkomen."

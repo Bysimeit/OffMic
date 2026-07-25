@@ -23,6 +23,30 @@
   "themeDark": {
     "message": "Dunkel"
   },
+  "labelMicDevice": {
+    "message": "Mikrofon"
+  },
+  "labelSpeakerDevice": {
+    "message": "Audioausgabe"
+  },
+  "labelMicVolume": {
+    "message": "Mikrofonlautstärke"
+  },
+  "labelTeamVolume": {
+    "message": "Teamlautstärke"
+  },
+  "deviceDefault": {
+    "message": "Systemstandard"
+  },
+  "deviceFallbackInput": {
+    "message": "Mikrofon {index}"
+  },
+  "deviceFallbackOutput": {
+    "message": "Ausgabe {index}"
+  },
+  "hintDevices": {
+    "message": "Mikrofonzugriff erlauben, um Ihre Audiogeräte anzuzeigen."
+  },
   "labelServer": {
     "message": "Server"
   },
@@ -77,8 +101,35 @@
   "peerAnonymous": {
     "message": "Anonym"
   },
+  "peerMute": {
+    "message": "{name} stummschalten"
+  },
+  "peerUnmute": {
+    "message": "Stummschaltung von {name} aufheben"
+  },
+  "peerVolume": {
+    "message": "Lautstärke von {name}"
+  },
   "peerStateUnknown": {
     "message": "unbekannt"
+  },
+  "peerStateNew": {
+    "message": "startet"
+  },
+  "peerStateConnecting": {
+    "message": "verbindet"
+  },
+  "peerStateConnected": {
+    "message": "online"
+  },
+  "peerStateDisconnected": {
+    "message": "offline"
+  },
+  "peerStateFailed": {
+    "message": "fehlgeschlagen"
+  },
+  "peerStateClosed": {
+    "message": "geschlossen"
   },
   "hintHeadset": {
     "message": "Tipp: Tragen Sie ein Headset, damit nichts zum Kunden durchdringt."

@@ -11,8 +11,19 @@ const state = {
   listenWhileUnmuted: true,
   peers: new Map(),
   iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-  lastError: null
+  lastError: null,
+  audio: { micDevice: "", speakerDevice: "", micVolume: 100, teamVolume: 100 },
+  audioCtx: null,
+  micSource: null,
+  micGain: null,
+  micDestination: null
 };
+
+function toLevel(percent) {
+  const value = Number(percent);
+  if (!Number.isFinite(value)) return 1;
+  return Math.min(1, Math.max(0, value / 100));
+}
 
 function send(msg) {
   if (state.ws && state.ws.readyState === WebSocket.OPEN) {
@@ -33,7 +44,9 @@ function report() {
       peers: Array.from(state.peers.entries()).map(([id, entry]) => ({
         id,
         name: entry.name,
-        state: entry.pc.connectionState
+        state: entry.pc.connectionState,
+        muted: entry.muted,
+        volume: entry.volume
       }))
     }
   });
@@ -47,12 +60,97 @@ function applyOutgoing() {
 
 function applyPlayback() {
   const allow = state.connected && (state.teamsMuted || state.listenWhileUnmuted);
+  const master = toLevel(state.audio.teamVolume);
   for (const entry of state.peers.values()) {
     if (!entry.audio) continue;
-    entry.audio.muted = !allow;
-    if (allow) {
+    const audible = allow && !entry.muted;
+    entry.audio.muted = !audible;
+    entry.audio.volume = master * toLevel(entry.volume);
+    if (audible) {
       entry.audio.play().catch(() => {});
     }
+  }
+}
+
+function applySink(audio) {
+  if (typeof audio.setSinkId !== "function") return;
+  audio.setSinkId(state.audio.speakerDevice || "").catch(() => {});
+}
+
+function applyMicVolume() {
+  if (state.micGain) {
+    state.micGain.gain.value = toLevel(state.audio.micVolume);
+  }
+}
+
+function buildMicChain(stream) {
+  if (!state.audioCtx) {
+    state.audioCtx = new AudioContext();
+    state.micGain = state.audioCtx.createGain();
+    state.micDestination = state.audioCtx.createMediaStreamDestination();
+    state.micGain.connect(state.micDestination);
+  }
+  if (state.micSource) {
+    state.micSource.disconnect();
+  }
+  state.micSource = state.audioCtx.createMediaStreamSource(stream);
+  state.micSource.connect(state.micGain);
+  applyMicVolume();
+  if (state.audioCtx.state === "suspended") {
+    state.audioCtx.resume().catch(() => {});
+  }
+}
+
+function micErrorCode(error) {
+  const name = error && error.name;
+  if (name === "NotAllowedError" || name === "SecurityError") return "micPermission";
+  if (name === "NotFoundError" || name === "DevicesNotFoundError") return "micMissing";
+  return "micFailed";
+}
+
+function captureMic(deviceId) {
+  const constraints = { echoCancellation: true, noiseSuppression: true, autoGainControl: true };
+  if (deviceId) {
+    constraints.deviceId = { exact: deviceId };
+  }
+  return navigator.mediaDevices.getUserMedia({ audio: constraints });
+}
+
+async function openMic() {
+  const requested = state.audio.micDevice;
+  let stream;
+
+  try {
+    stream = await captureMic(requested);
+  } catch (e) {
+    const code = micErrorCode(e);
+    if (!requested || code === "micPermission") {
+      state.lastError = code;
+      report();
+      return false;
+    }
+    try {
+      stream = await captureMic("");
+    } catch (fallbackError) {
+      state.lastError = micErrorCode(fallbackError);
+      report();
+      return false;
+    }
+  }
+
+  state.lastError = null;
+  state.localStream = stream;
+  buildMicChain(stream);
+  state.outgoingTrack = state.micDestination.stream.getAudioTracks()[0];
+  applyOutgoing();
+  return true;
+}
+
+async function switchMic() {
+  const previous = state.localStream;
+  const ok = await openMic();
+  if (ok && previous && previous !== state.localStream) {
+    previous.getTracks().forEach((t) => t.stop());
   }
 }
 
@@ -64,27 +162,14 @@ async function connect(payload) {
   if (Array.isArray(payload.iceServers) && payload.iceServers.length) {
     state.iceServers = payload.iceServers;
   }
+  if (payload.audio) {
+    Object.assign(state.audio, payload.audio);
+  }
   state.peerId = crypto.randomUUID();
   state.lastError = null;
 
-  try {
-    state.localStream = await navigator.mediaDevices.getUserMedia({
-      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
-    });
-  } catch (e) {
-    const name = e && e.name;
-    if (name === "NotAllowedError" || name === "SecurityError") {
-      state.lastError = "micPermission";
-    } else if (name === "NotFoundError" || name === "DevicesNotFoundError") {
-      state.lastError = "micMissing";
-    } else {
-      state.lastError = "micFailed";
-    }
-    report();
-    return;
-  }
-  state.outgoingTrack = state.localStream.getAudioTracks()[0];
-  state.outgoingTrack.enabled = false;
+  const ready = await openMic();
+  if (!ready) return;
 
   let ws;
   try {
@@ -146,11 +231,13 @@ async function createPeer(peerId, name, initiator) {
   const pc = new RTCPeerConnection({ iceServers: state.iceServers });
   const audio = new Audio();
   audio.autoplay = true;
-  const entry = { pc, name: name || "", audio };
+  audio.volume = toLevel(state.audio.teamVolume);
+  applySink(audio);
+  const entry = { pc, name: name || "", audio, muted: false, volume: 100 };
   state.peers.set(peerId, entry);
 
   if (state.outgoingTrack) {
-    pc.addTrack(state.outgoingTrack, state.localStream);
+    pc.addTrack(state.outgoingTrack, state.micDestination.stream);
   }
 
   pc.addEventListener("icecandidate", (e) => {
@@ -225,6 +312,35 @@ function setListen(listen) {
   report();
 }
 
+function setAudio(audio) {
+  if (!audio) return;
+  const previous = state.audio;
+  state.audio = Object.assign({}, previous, audio);
+  applyMicVolume();
+  if (state.audio.speakerDevice !== previous.speakerDevice) {
+    for (const entry of state.peers.values()) {
+      if (entry.audio) applySink(entry.audio);
+    }
+  }
+  if (state.audio.micDevice !== previous.micDevice && state.localStream) {
+    switchMic();
+  }
+  applyPlayback();
+}
+
+function setPeerAudio(peerId, patch) {
+  const entry = state.peers.get(peerId);
+  if (!entry || !patch) return;
+  if (typeof patch.muted === "boolean") {
+    entry.muted = patch.muted;
+  }
+  if (patch.volume !== undefined) {
+    entry.volume = patch.volume;
+  }
+  applyPlayback();
+  report();
+}
+
 function teardown() {
   for (const id of Array.from(state.peers.keys())) {
     removePeer(id);
@@ -235,6 +351,10 @@ function teardown() {
     } catch (e) {}
   }
   state.ws = null;
+  if (state.micSource) {
+    state.micSource.disconnect();
+    state.micSource = null;
+  }
   if (state.localStream) {
     state.localStream.getTracks().forEach((t) => t.stop());
   }
@@ -253,5 +373,7 @@ chrome.runtime.onMessage.addListener((msg) => {
   }
   else if (msg.cmd === "muteState") setMute(msg.muted);
   else if (msg.cmd === "setListen") setListen(msg.listen);
+  else if (msg.cmd === "setAudio") setAudio(msg.audio);
+  else if (msg.cmd === "setPeerAudio") setPeerAudio(msg.peerId, msg.patch);
   else if (msg.cmd === "getStatus") report();
 });

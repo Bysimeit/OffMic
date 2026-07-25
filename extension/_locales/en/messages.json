@@ -23,6 +23,30 @@
   "themeDark": {
     "message": "Dark"
   },
+  "labelMicDevice": {
+    "message": "Microphone"
+  },
+  "labelSpeakerDevice": {
+    "message": "Audio output"
+  },
+  "labelMicVolume": {
+    "message": "Microphone volume"
+  },
+  "labelTeamVolume": {
+    "message": "Team volume"
+  },
+  "deviceDefault": {
+    "message": "System default"
+  },
+  "deviceFallbackInput": {
+    "message": "Microphone {index}"
+  },
+  "deviceFallbackOutput": {
+    "message": "Output {index}"
+  },
+  "hintDevices": {
+    "message": "Grant microphone access to list your audio devices."
+  },
   "labelServer": {
     "message": "Server"
   },
@@ -77,8 +101,35 @@
   "peerAnonymous": {
     "message": "Anonymous"
   },
+  "peerMute": {
+    "message": "Mute {name}"
+  },
+  "peerUnmute": {
+    "message": "Unmute {name}"
+  },
+  "peerVolume": {
+    "message": "Volume for {name}"
+  },
   "peerStateUnknown": {
     "message": "unknown"
+  },
+  "peerStateNew": {
+    "message": "starting"
+  },
+  "peerStateConnecting": {
+    "message": "connecting"
+  },
+  "peerStateConnected": {
+    "message": "connected"
+  },
+  "peerStateDisconnected": {
+    "message": "disconnected"
+  },
+  "peerStateFailed": {
+    "message": "failed"
+  },
+  "peerStateClosed": {
+    "message": "closed"
   },
   "hintHeadset": {
     "message": "Tip: wear a headset to avoid any leak to the client."

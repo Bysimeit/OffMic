@@ -113,6 +113,32 @@ input[type="text"]::placeholder {
   color: var(--muted);
 }
 
+input[type="range"] {
+  width: 100%;
+  margin: 5px 0 0;
+  accent-color: var(--accent);
+}
+
+.range-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.range-value {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+#deviceHint {
+  margin: 0 0 8px;
+}
+
+#deviceGrantBtn {
+  margin-bottom: 8px;
+}
+
 .switch {
   display: flex;
   align-items: center;
@@ -182,6 +208,67 @@ ul {
 
 li {
   padding: 3px 0;
+}
+
+.peer {
+  padding: 6px 0;
+}
+
+.peer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.peer-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.peer-actions {
+  display: flex;
+  align-items: center;
+  flex: none;
+  gap: 4px;
+}
+
+.peer-volume-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.peer-volume-row[hidden] {
+  display: none;
+}
+
+.peer-volume-row input[type="range"] {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+.peer-mute:not(.muted) .mic-slash {
+  display: none;
+}
+
+.peer-mute.muted {
+  color: var(--warn);
+}
+
+.peer-volume-toggle.open {
+  color: var(--accent);
+}
+
+.peer-volume-value {
+  flex: none;
+  width: 34px;
+  text-align: right;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .hint {
