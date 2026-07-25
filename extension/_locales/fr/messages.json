@@ -23,6 +23,30 @@
   "themeDark": {
     "message": "Sombre"
   },
+  "labelMicDevice": {
+    "message": "Micro"
+  },
+  "labelSpeakerDevice": {
+    "message": "Sortie audio"
+  },
+  "labelMicVolume": {
+    "message": "Volume du micro"
+  },
+  "labelTeamVolume": {
+    "message": "Volume de l'équipe"
+  },
+  "deviceDefault": {
+    "message": "Périphérique par défaut"
+  },
+  "deviceFallbackInput": {
+    "message": "Micro {index}"
+  },
+  "deviceFallbackOutput": {
+    "message": "Sortie {index}"
+  },
+  "hintDevices": {
+    "message": "Autorisez le micro pour lister vos périphériques audio."
+  },
   "labelServer": {
     "message": "Serveur"
   },
@@ -77,8 +101,35 @@
   "peerAnonymous": {
     "message": "Anonyme"
   },
+  "peerMute": {
+    "message": "Couper {name}"
+  },
+  "peerUnmute": {
+    "message": "Réactiver {name}"
+  },
+  "peerVolume": {
+    "message": "Volume de {name}"
+  },
   "peerStateUnknown": {
     "message": "inconnu"
+  },
+  "peerStateNew": {
+    "message": "démarrage"
+  },
+  "peerStateConnecting": {
+    "message": "connexion"
+  },
+  "peerStateConnected": {
+    "message": "connecté"
+  },
+  "peerStateDisconnected": {
+    "message": "déconnecté"
+  },
+  "peerStateFailed": {
+    "message": "échec"
+  },
+  "peerStateClosed": {
+    "message": "arrêt"
   },
   "hintHeadset": {
     "message": "Astuce : portez un casque pour éviter toute fuite vers le client."

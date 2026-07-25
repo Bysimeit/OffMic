@@ -23,6 +23,30 @@
   "themeDark": {
     "message": "Oscuro"
   },
+  "labelMicDevice": {
+    "message": "Micrófono"
+  },
+  "labelSpeakerDevice": {
+    "message": "Salida de audio"
+  },
+  "labelMicVolume": {
+    "message": "Volumen del micrófono"
+  },
+  "labelTeamVolume": {
+    "message": "Volumen del equipo"
+  },
+  "deviceDefault": {
+    "message": "Predeterminado del sistema"
+  },
+  "deviceFallbackInput": {
+    "message": "Micrófono {index}"
+  },
+  "deviceFallbackOutput": {
+    "message": "Salida {index}"
+  },
+  "hintDevices": {
+    "message": "Permite el micrófono para ver tus dispositivos de audio."
+  },
   "labelServer": {
     "message": "Servidor"
   },
@@ -77,8 +101,35 @@
   "peerAnonymous": {
     "message": "Anónimo"
   },
+  "peerMute": {
+    "message": "Silenciar a {name}"
+  },
+  "peerUnmute": {
+    "message": "Reactivar a {name}"
+  },
+  "peerVolume": {
+    "message": "Volumen de {name}"
+  },
   "peerStateUnknown": {
     "message": "desconocido"
+  },
+  "peerStateNew": {
+    "message": "iniciando"
+  },
+  "peerStateConnecting": {
+    "message": "conectando"
+  },
+  "peerStateConnected": {
+    "message": "en línea"
+  },
+  "peerStateDisconnected": {
+    "message": "sin conexión"
+  },
+  "peerStateFailed": {
+    "message": "fallo"
+  },
+  "peerStateClosed": {
+    "message": "cerrada"
   },
   "hintHeadset": {
     "message": "Consejo: usa auriculares para evitar cualquier fuga hacia el cliente."

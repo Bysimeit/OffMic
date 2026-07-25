@@ -10,11 +10,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-.env.local
-.env.*.local
-
-extension/config.js
-
 docker-compose*.yml
 
 .DS_Store

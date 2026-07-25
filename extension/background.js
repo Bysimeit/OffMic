@@ -78,7 +78,7 @@ async function ensureOffscreen() {
   if (!creating) {
     creating = chrome.offscreen.createDocument({
       url: "offscreen.html",
-      reasons: ["USER_MEDIA"],
+      reasons: ["USER_MEDIA", "AUDIO_PLAYBACK"],
       justification: "Microphone capture and WebRTC connections for the team voice channel."
     });
   }
@@ -96,7 +96,10 @@ function pushError(code) {
 }
 
 function toOffscreen(cmd, extra) {
-  chrome.runtime.sendMessage(Object.assign({ target: "offscreen", cmd }, extra || {}));
+  chrome.runtime.sendMessage(
+    Object.assign({ target: "offscreen", cmd }, extra || {}),
+    () => chrome.runtime.lastError
+  );
 }
 
 const TEAMS_URLS = [
@@ -144,6 +147,16 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
   if (msg.cmd === "setListen") {
     toOffscreen("setListen", { listen: msg.listen });
+    return;
+  }
+
+  if (msg.cmd === "setAudio") {
+    toOffscreen("setAudio", { audio: msg.audio });
+    return;
+  }
+
+  if (msg.cmd === "setPeerAudio") {
+    toOffscreen("setPeerAudio", { peerId: msg.peerId, patch: msg.patch });
     return;
   }
 

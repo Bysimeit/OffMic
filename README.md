@@ -63,6 +63,10 @@ Voice travels over **peer-to-peer WebRTC**, in a mesh. It never goes through a s
 
 The room name is the only shared secret. Pick one nobody will guess.
 
+The gear icon opens the settings: language, appearance, which microphone and audio output OffMic uses, and the two volumes (your mic, and the team you hear). Everything applies live, without dropping the connection.
+
+Each teammate in the list also carries its own mic toggle and volume slider, so one loud voice can be turned down instead of turning everyone else up. Those are per session: someone who leaves and comes back is back at full volume.
+
 ## Installation, if you want to host your own relay server
 
 None of this is needed to use OffMic. The extension already points at a hosted relay, so installing it and joining a room is all it takes. Follow the steps below only if you would rather run the signaling for your team yourself.
@@ -71,28 +75,24 @@ None of this is needed to use OffMic. The extension already points at a hosted r
 
 Node.js 18 or newer, and Chrome.
 
-### 1. Point the extension at your own server
+### 1. Clone
 
 ```bash
 git clone https://github.com/Bysimeit/OffMic.git
 cd OffMic
 ```
 
-Open `.env` at the root and put your own address in it:
+There is no build step. A fresh clone already points at the public relay `wss://offmic.xeron.be`, so you can skip straight to the next section.
 
-```ini
-OFFMIC_SERVER_URL=wss://relay.example.com
+To use your own server instead, open `extension/config.js` and change the one line in it:
+
+```js
+const OFFMIC_CONFIG = {
+  serverUrl: "wss://relay.example.com"
+};
 ```
 
-Then generate the config the extension reads:
-
-```bash
-node tools/build-config.mjs
-```
-
-This turns `.env` into `extension/config.js`. **Run it at least once**, otherwise the Server field in the popup opens empty.
-
-The address is also editable directly in the popup, if you only want to try another relay without rebuilding anything.
+That value is only the **default** shown on a fresh Chrome profile. The address is editable in the popup at any time, and what you type there is remembered, so trying another relay never requires touching a file.
 
 ### 2. Load the extension
 
