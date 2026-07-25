@@ -9,41 +9,61 @@ const HOST = process.env.HOST || "";
 const SITE = process.env.SITE_URL || "https://offmic.xeron.be";
 const rooms = new Map();
 
-const landing = readFileSync(
-  join(dirname(fileURLToPath(import.meta.url)), "landing.html")
-);
+const pages = dirname(fileURLToPath(import.meta.url));
+const landing = readFileSync(join(pages, "landing.html"));
+const privacy = readFileSync(join(pages, "privacy.html"));
 
 const robots = `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`;
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>${SITE}/</loc></url>
+  <url><loc>${SITE}/privacy</loc></url>
 </urlset>
 `;
 
 const server = createServer((req, res) => {
-  const path = (req.url || "/").split("?")[0];
+  const path = (req.url || "/").split("?")[0].replace(/\/+$/, "") || "/";
+  const readable = req.method === "GET" || req.method === "HEAD";
 
-  if (req.method === "GET" && path === "/robots.txt") {
+  if (!readable) {
+    res.writeHead(405, { "content-type": "text/plain; charset=utf-8", allow: "GET, HEAD" });
+    res.end("Method not allowed\n");
+    return;
+  }
+
+  if (path === "/robots.txt") {
     res.writeHead(200, { "content-type": "text/plain; charset=utf-8" });
     res.end(robots);
     return;
   }
 
-  if (req.method === "GET" && path === "/sitemap.xml") {
+  if (path === "/sitemap.xml") {
     res.writeHead(200, { "content-type": "application/xml; charset=utf-8" });
     res.end(sitemap);
     return;
   }
 
-  if (req.method === "GET" && (req.headers.accept || "").includes("text/html")) {
+  if (path === "/privacy") {
+    res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
+    res.end(privacy);
+    return;
+  }
+
+  if (path === "/health") {
+    res.writeHead(200, { "content-type": "text/plain; charset=utf-8" });
+    res.end("OffMic signaling OK\n");
+    return;
+  }
+
+  if (path === "/") {
     res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
     res.end(landing);
     return;
   }
 
-  res.writeHead(200, { "content-type": "text/plain; charset=utf-8" });
-  res.end("OffMic signaling OK\n");
+  res.writeHead(404, { "content-type": "text/plain; charset=utf-8" });
+  res.end("Not found\n");
 });
 
 const wss = new WebSocketServer({ server });
