@@ -38,6 +38,8 @@ OffMic **never controls** the Teams microphone. It watches it.
 2. **Capture.** An offscreen document opens the microphone alongside Teams.
 3. **Decide.** The outgoing track is enabled only when the connection is up **and** the Teams mic is muted.
 
+Where the capture and the peer connections live depends on the browser. Chrome hosts them in an offscreen document; Firefox refuses microphone access from an extension background page, so it hosts them in the Teams tab itself. The media code is the same file in both cases, only the host changes.
+
 Voice travels over **peer-to-peer WebRTC**, in a mesh. It never goes through a server. The signaling server only introduces peers to each other, just long enough to exchange SDP descriptions and ICE candidates. Once the peers are connected, nothing flows through it anymore.
 
 ```
@@ -54,16 +56,30 @@ Voice travels over **peer-to-peer WebRTC**, in a mesh. It never goes through a s
 - **Headphones are mandatory.** If your team's voice comes out of your speakers while your Teams mic is live, the client will hear it. No software can fix that.
 - **Teams web only.** A browser extension has no reach into the Teams desktop client.
 - **Detection depends on the Teams DOM.** Microsoft can change its UI and break it. English and French interfaces are recognized, with a polling fallback.
-- **Chrome for now.** The offscreen document is Chrome specific. A Firefox port is planned.
+- **Chrome and Firefox.** Chrome runs the voice channel in an offscreen document, Firefox inside your Teams tab. Same code, one manifest each.
 - **Up to 5 or 6 people.** Beyond that, a peer-to-peer mesh costs too much upstream bandwidth.
 
 ## Install
+
+### Chrome
 
 OffMic is published on the Chrome Web Store:
 
 **[chromewebstore.google.com/detail/onacjipehnjfchieiakjlofndidcnkod](https://chromewebstore.google.com/detail/onacjipehnjfchieiakjlofndidcnkod)**
 
-Add it to Chrome, open the popup, and click the microphone permission link once. That step matters: an offscreen document has no UI, so it cannot show a permission prompt. Without it, capture fails with `NotAllowedError`.
+### Firefox
+
+Firefox 115 or newer. The build is not on addons.mozilla.org yet, so grab `offmic-firefox.zip` from the [latest release](https://github.com/Bysimeit/OffMic/releases), unzip it, then open `about:debugging` → **This Firefox** → **Load Temporary Add-on** and pick the `manifest.json` inside. Being a temporary add-on, it goes away when you restart Firefox.
+
+### On Chrome, one permission step
+
+Open the popup and click the microphone permission link once. That step matters: the offscreen document has no UI, so it cannot show a permission prompt. Without it, capture fails with `NotAllowedError`.
+
+### On Firefox, nothing to grant
+
+Firefox refuses `getUserMedia` from an extension background page outright, whatever permission is stored, because there is no browsing context to attach the capture to. So on Firefox the voice channel runs inside your Teams tab instead, as a content script. It captures under the Teams origin, which already holds the microphone permission for your meeting, so there is no second prompt and nothing extra to click.
+
+The consequence is that the Teams tab **is** the channel. Connect with your meeting open, and if that tab is closed or reloaded the channel stops and the popup says so.
 
 Nothing else to install. The extension already points at a hosted relay, so joining a room is all it takes.
 
@@ -111,14 +127,30 @@ That value is only the **default** shown on a fresh Chrome profile. The address 
 
 ### 2. Load the extension from source
 
-Skip this if you already installed the store build, it works the same against your own relay.
+Skip this if you already installed a packaged build, it works the same against your own relay.
+
+`extension/` holds one source tree and two manifests: `manifest.json` for Chrome, `manifest.firefox.json` for Firefox. The build script copies the tree into `dist/`, one folder per browser, with the right manifest in place:
+
+```bash
+node tools/build-extension.mjs
+```
+
+On Chrome you can also load `extension/` directly, since its `manifest.json` is already the Chrome one.
+
+**Chrome**
 
 1. Open `chrome://extensions`
 2. Turn on **Developer mode**
-3. **Load unpacked**, then pick the `extension/` folder
+3. **Load unpacked**, then pick `dist/chrome/` (or `extension/`)
 4. Open the popup and click the microphone permission link
 
-Step 4 matters: an offscreen document has no UI, so it cannot show a permission prompt. You have to grant access once from the dedicated page, otherwise capture fails with `NotAllowedError`.
+**Firefox**
+
+1. Open `about:debugging` → **This Firefox**
+2. **Load Temporary Add-on**, then pick `dist/firefox/manifest.json`
+3. Open the popup and click the microphone permission link
+
+The last step matters on both: the audio runs in a context with no UI, so it cannot show a permission prompt. You have to grant access once from the dedicated page, otherwise capture fails with `NotAllowedError`.
 
 ### 3. Run the signaling server
 

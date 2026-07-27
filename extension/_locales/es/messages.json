@@ -176,6 +176,9 @@
   "errOffscreenFailed": {
     "message": "Error interno: el documento de micrófono no pudo iniciarse. Vuelve a cargar la extensión."
   },
+  "errNoTeamsTab": {
+    "message": "OffMic necesita que la pestaña de tu reunión de Teams esté abierta. Ábrela y vuelve a conectar."
+  },
   "errNoResponse": {
     "message": "La extensión no responde. Vuelve a cargarla desde chrome://extensions e inténtalo de nuevo."
   }

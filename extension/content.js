@@ -67,9 +67,7 @@ function poll() {
   if (muted === null) return;
   if (muted !== lastState) {
     lastState = muted;
-    try {
-      chrome.runtime.sendMessage({ cmd: "muteState", muted });
-    } catch (e) {}
+    apiSend({ cmd: "muteState", muted });
   }
 }
 
@@ -84,7 +82,7 @@ observer.observe(document.documentElement, {
 setInterval(poll, 1500);
 poll();
 
-chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg && msg.cmd === "requestMuteState") {
     lastState = null;
     poll();

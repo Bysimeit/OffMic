@@ -33,7 +33,8 @@ const ERROR_KEYS = {
   micFailed: "errMicFailed",
   badServerUrl: "errBadServerUrl",
   serverUnreachable: "errServerUnreachable",
-  offscreenFailed: "errOffscreenFailed"
+  offscreenFailed: "errOffscreenFailed",
+  noTeamsTab: "errNoTeamsTab"
 };
 
 const PEER_STATE_KEYS = {
@@ -83,7 +84,7 @@ function t(key, vars) {
 }
 
 async function loadSettings() {
-  const data = await chrome.storage.local.get("settings");
+  const data = await api.storage.local.get("settings");
   const s = Object.assign({}, DEFAULTS, data.settings || {});
   if (!s.serverUrl) {
     s.serverUrl = DEFAULTS.serverUrl;
@@ -114,7 +115,7 @@ function saveSettings() {
     micVolume: Number(els.micVolume.value),
     teamVolume: Number(els.teamVolume.value)
   };
-  chrome.storage.local.set({ settings });
+  api.storage.local.set({ settings });
   return settings;
 }
 
@@ -128,7 +129,7 @@ function currentAudio() {
 }
 
 function pushAudio() {
-  chrome.runtime.sendMessage({ cmd: "setAudio", audio: currentAudio() }, () => chrome.runtime.lastError);
+  apiSend({ cmd: "setAudio", audio: currentAudio() });
 }
 
 function renderVolumeValues() {
@@ -197,7 +198,7 @@ function connect() {
     showError(t("errNoResponse"), false);
     els.stateLine.textContent = t("stateDisconnected");
   }, REPLY_TIMEOUT);
-  chrome.runtime.sendMessage({
+  apiSend({
     cmd: "connect",
     payload: {
       serverUrl: s.serverUrl,
@@ -212,7 +213,7 @@ function connect() {
 function disconnect() {
   localError = "";
   clearReplyTimer();
-  chrome.runtime.sendMessage({ cmd: "disconnect" });
+  apiSend({ cmd: "disconnect" });
 }
 
 function showError(text, offerGrant) {
@@ -222,7 +223,7 @@ function showError(text, offerGrant) {
 }
 
 function sendPeerAudio(peerId, patch) {
-  chrome.runtime.sendMessage({ cmd: "setPeerAudio", peerId, patch }, () => chrome.runtime.lastError);
+  apiSend({ cmd: "setPeerAudio", peerId, patch });
 }
 
 function paintPeerMute(row) {
@@ -363,7 +364,7 @@ els.connectBtn.addEventListener("click", connect);
 els.disconnectBtn.addEventListener("click", disconnect);
 
 els.grantBtn.addEventListener("click", () => {
-  chrome.tabs.create({ url: chrome.runtime.getURL("permission.html") });
+  api.tabs.create({ url: api.runtime.getURL("permission.html") });
 });
 
 els.settingsBtn.addEventListener("click", () => {
@@ -372,7 +373,7 @@ els.settingsBtn.addEventListener("click", () => {
 
 els.listen.addEventListener("change", () => {
   saveSettings();
-  chrome.runtime.sendMessage({ cmd: "setListen", listen: els.listen.checked });
+  apiSend({ cmd: "setListen", listen: els.listen.checked });
 });
 
 els.language.addEventListener("change", () => {
@@ -386,7 +387,7 @@ els.theme.addEventListener("change", () => {
 });
 
 els.deviceGrantBtn.addEventListener("click", () => {
-  chrome.tabs.create({ url: chrome.runtime.getURL("permission.html") });
+  api.tabs.create({ url: api.runtime.getURL("permission.html") });
 });
 
 for (const [el, key] of [
@@ -410,7 +411,7 @@ for (const el of [els.micVolume, els.teamVolume]) {
 
 navigator.mediaDevices.addEventListener("devicechange", loadDevices);
 
-chrome.runtime.onMessage.addListener((msg) => {
+api.runtime.onMessage.addListener((msg) => {
   if (msg && msg.cmd === "status") {
     clearReplyTimer();
     render(msg.status);
@@ -422,10 +423,10 @@ async function init() {
   themeApply(s.theme);
   await loadDevices();
   await applyLanguage(s.language);
-  chrome.runtime.sendMessage({ cmd: "getStatus" }, (status) => {
-    if (chrome.runtime.lastError) return;
+  try {
+    const status = await api.runtime.sendMessage({ cmd: "getStatus" });
     if (status) render(status);
-  });
+  } catch (e) {}
 }
 
 init();

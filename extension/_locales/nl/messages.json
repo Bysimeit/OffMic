@@ -176,6 +176,9 @@
   "errOffscreenFailed": {
     "message": "Interne fout: het microfoondocument kon niet starten. Herlaad de extensie."
   },
+  "errNoTeamsTab": {
+    "message": "OffMic heeft het tabblad van je Teams-vergadering nodig. Open het en verbind opnieuw."
+  },
   "errNoResponse": {
     "message": "Geen antwoord van de extensie. Herlaad ze via chrome://extensions en probeer opnieuw."
   }

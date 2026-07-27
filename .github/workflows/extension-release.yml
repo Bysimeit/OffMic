@@ -45,21 +45,29 @@ jobs:
 
       - run: node tools/check-locales.mjs
 
+      - run: node tools/build-extension.mjs
+
+      - name: Lint the Firefox build
+        run: npx --yes web-ext@8 lint --source-dir dist/firefox --self-hosted
+
       - id: version
         run: echo "value=$(node -p "require('./extension/manifest.json').version")" >> "$GITHUB_OUTPUT"
 
-      - name: Package the extension
+      - name: Package the extensions
         run: |
-          (cd extension && zip -qr ../offmic.zip .)
-          sha256sum offmic.zip > offmic.zip.sha256
-          unzip -l offmic.zip
+          (cd dist/chrome && zip -qr ../../offmic-chrome.zip .)
+          (cd dist/firefox && zip -qr ../../offmic-firefox.zip .)
+          sha256sum offmic-chrome.zip offmic-firefox.zip > SHA256SUMS
+          unzip -l offmic-chrome.zip
+          unzip -l offmic-firefox.zip
 
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: extension
           path: |
-            offmic.zip
-            offmic.zip.sha256
+            offmic-chrome.zip
+            offmic-firefox.zip
+            SHA256SUMS
           if-no-files-found: error
 
   release:
@@ -82,7 +90,7 @@ jobs:
           PRERELEASE: ${{ inputs.prerelease }}
         working-directory: dist
         run: |
-          files=(offmic.zip offmic.zip.sha256)
+          files=(offmic-chrome.zip offmic-firefox.zip SHA256SUMS)
           if [ "$OFFICIAL" = "true" ]; then
             flags=""
             [ "$PRERELEASE" = "true" ] && flags="--prerelease"
