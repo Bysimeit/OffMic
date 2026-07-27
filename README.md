@@ -4,9 +4,12 @@
 
 **A private voice channel for your team, during your Teams meetings.**
 
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE)
+[![Available in the Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Available-4f6bed.svg)](https://chromewebstore.google.com/detail/onacjipehnjfchieiakjlofndidcnkod)
 [![Manifest V3](https://img.shields.io/badge/Chrome-Manifest%20V3-4f6bed.svg)](https://developer.chrome.com/docs/extensions/develop/migrate)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE)
 ![Version](https://img.shields.io/badge/version-0.1.0-green.svg)
+
+**[Install OffMic from the Chrome Web Store](https://chromewebstore.google.com/detail/onacjipehnjfchieiakjlofndidcnkod)**
 
 </div>
 
@@ -54,6 +57,16 @@ Voice travels over **peer-to-peer WebRTC**, in a mesh. It never goes through a s
 - **Chrome for now.** The offscreen document is Chrome specific. A Firefox port is planned.
 - **Up to 5 or 6 people.** Beyond that, a peer-to-peer mesh costs too much upstream bandwidth.
 
+## Install
+
+OffMic is published on the Chrome Web Store:
+
+**[chromewebstore.google.com/detail/onacjipehnjfchieiakjlofndidcnkod](https://chromewebstore.google.com/detail/onacjipehnjfchieiakjlofndidcnkod)**
+
+Add it to Chrome, open the popup, and click the microphone permission link once. That step matters: an offscreen document has no UI, so it cannot show a permission prompt. Without it, capture fails with `NotAllowedError`.
+
+Nothing else to install. The extension already points at a hosted relay, so joining a room is all it takes.
+
 ## Usage
 
 1. Join your meeting on Teams web.
@@ -69,7 +82,9 @@ Each teammate in the list also carries its own mic toggle and volume slider, so 
 
 ## Installation, if you want to host your own relay server
 
-None of this is needed to use OffMic. The extension already points at a hosted relay, so installing it and joining a room is all it takes. Follow the steps below only if you would rather run the signaling for your team yourself.
+None of this is needed to use OffMic. The Chrome Web Store build already points at a hosted relay, so installing it and joining a room is all it takes. Follow the steps below only if you would rather run the signaling for your team yourself.
+
+Note that pointing at your own relay does not require a clone either: the address is editable straight from the popup, in the store build as much as in a local one.
 
 ### Requirements
 
@@ -94,7 +109,9 @@ const OFFMIC_CONFIG = {
 
 That value is only the **default** shown on a fresh Chrome profile. The address is editable in the popup at any time, and what you type there is remembered, so trying another relay never requires touching a file.
 
-### 2. Load the extension
+### 2. Load the extension from source
+
+Skip this if you already installed the store build, it works the same against your own relay.
 
 1. Open `chrome://extensions`
 2. Turn on **Developer mode**
