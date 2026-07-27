@@ -5,13 +5,13 @@ function i18nResolve(preference) {
   if (preference && preference !== "auto") {
     if (I18N_SUPPORTED.includes(preference)) return preference;
   }
-  const ui = (chrome.i18n.getUILanguage() || I18N_FALLBACK).toLowerCase();
+  const ui = (api.i18n.getUILanguage() || I18N_FALLBACK).toLowerCase();
   const base = ui.split("-")[0];
   return I18N_SUPPORTED.includes(base) ? base : I18N_FALLBACK;
 }
 
 async function i18nLoad(locale) {
-  const url = chrome.runtime.getURL("_locales/" + locale + "/messages.json");
+  const url = api.runtime.getURL("_locales/" + locale + "/messages.json");
   const response = await fetch(url);
   const raw = await response.json();
   const dict = {};
@@ -22,7 +22,7 @@ async function i18nLoad(locale) {
 }
 
 async function i18nLoadPreferred() {
-  const data = await chrome.storage.local.get("settings");
+  const data = await api.storage.local.get("settings");
   const preference = data.settings && data.settings.language;
   const locale = i18nResolve(preference);
   const dict = await i18nLoad(locale);

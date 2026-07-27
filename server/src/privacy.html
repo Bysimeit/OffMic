@@ -128,7 +128,7 @@
 
   <main class="wrap">
     <h1>Privacy policy</h1>
-    <p class="updated">Last updated 25 July 2026. Applies to the OffMic Chrome extension and to the signaling server at offmic.xeron.be.</p>
+    <p class="updated">Last updated 27 July 2026. Applies to the OffMic extension for Chrome and Firefox, and to the signaling server at offmic.xeron.be.</p>
 
     <p class="lede">OffMic has no account, no sign-up, no tracking and no analytics. Your voice is encrypted end to end and travels straight to your teammates. It never passes through any server, including ours.</p>
 
@@ -182,7 +182,7 @@
     </div>
 
     <h3>Your settings stay local</h3>
-    <p>Settings live in <code>chrome.storage.local</code>, which is your own browser profile. They are not synced to a Google account and are never sent to us. Removing the extension removes them.</p>
+    <p>Settings live in the extension's local storage, which is your own browser profile, on Chrome as on Firefox. They are not synced to any account and are never sent to us. Removing the extension removes them.</p>
 
     <h3>The signaling server stores nothing</h3>
     <p>Rooms exist only in the memory of the running process. Nothing is written to a database, a log file or a disk. When everyone leaves a room, it disappears. Restarting the server erases everything it held.</p>
@@ -194,10 +194,14 @@
     <h2>Permissions and why they exist</h2>
     <ul>
       <li><strong>Microphone.</strong> Captured only while you are connected to a room, and released the moment you disconnect. It feeds the private channel and nothing else.</li>
-      <li><strong>offscreen.</strong> Lets the extension hold the microphone and the peer connections in the background so a call survives closing the popup or switching tabs. It has no interface and is never displayed.</li>
+      <li><strong>offscreen, on Chrome only.</strong> Lets the extension hold the microphone and the peer connections in a hidden document, so a call survives closing the popup or switching tabs. It has no interface and is never displayed. Firefox has no such permission and does not need one.</li>
       <li><strong>storage.</strong> Remembers your settings between sessions so you do not retype them before every meeting.</li>
       <li><strong>Access to the three Teams domains.</strong> Required to read the mute state, which is the switch the whole extension is built on.</li>
     </ul>
+
+    <h3>Where the audio runs, and why it differs</h3>
+    <p>On Chrome, your microphone and the peer connections live in a hidden extension document. Firefox refuses microphone access from an extension background page, so on Firefox they run inside your Teams tab instead, under the Teams origin that already holds the microphone permission for your meeting. That is also why Firefox never asks you for a second permission.</p>
+    <p>Nothing about what is captured, sent or stored changes between the two. The one practical difference is that on Firefox the private channel stops if you close or reload the Teams tab, since that tab is where it lives.</p>
 
     <h2>What we never do</h2>
     <div class="card warn">

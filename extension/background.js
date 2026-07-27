@@ -1,6 +1,14 @@
-importScripts("i18n.js");
+if (typeof importScripts === "function") {
+  importScripts("compat.js", "i18n.js");
+}
+
+const HAS_OFFSCREEN = !!(api.offscreen && api.offscreen.createDocument);
+const KEEP_ALIVE_INTERVAL = 20000;
 
 let creating = null;
+let keepAliveTimer = null;
+let mediaTabId = null;
+let pendingPayload = null;
 let lastStatus = { connected: false, teamsMuted: false, transmitting: false, peers: [] };
 
 const MARK_COLOR = "#4f6bed";
@@ -54,53 +62,44 @@ async function updateIcon(status) {
   for (const size of ICON_SIZES) {
     imageData[size] = drawMark(size, connected);
   }
-  chrome.action.setIcon({ imageData });
-  chrome.action.setBadgeText({ text: "" });
+  api.action.setIcon({ imageData });
+  api.action.setBadgeText({ text: "" });
 
   const { dict } = await i18nLoadPreferred();
-  chrome.action.setTitle({
+  api.action.setTitle({
     title: i18nText(dict, connected ? "actionTitleConnected" : "actionTitle")
   });
 }
 
-chrome.runtime.onStartup.addListener(() => updateIcon(null));
-chrome.runtime.onInstalled.addListener(() => updateIcon(null));
+function setKeepAlive(on) {
+  if (HAS_OFFSCREEN) return;
+  if (on && !keepAliveTimer) {
+    keepAliveTimer = setInterval(() => {
+      const pending = api.runtime.getPlatformInfo();
+      if (pending && typeof pending.catch === "function") {
+        pending.catch(() => {});
+      }
+    }, KEEP_ALIVE_INTERVAL);
+  } else if (!on && keepAliveTimer) {
+    clearInterval(keepAliveTimer);
+    keepAliveTimer = null;
+  }
+}
 
-chrome.storage.onChanged.addListener((changes, area) => {
+function applyStatus(status) {
+  lastStatus = status;
+  updateIcon(status);
+  setKeepAlive(!!(status && status.connected));
+}
+
+api.runtime.onStartup.addListener(() => updateIcon(null));
+api.runtime.onInstalled.addListener(() => updateIcon(null));
+
+api.storage.onChanged.addListener((changes, area) => {
   if (area === "local" && changes.settings) {
     updateIcon(lastStatus);
   }
 });
-
-async function ensureOffscreen() {
-  const has = await chrome.offscreen.hasDocument();
-  if (has) return;
-  if (!creating) {
-    creating = chrome.offscreen.createDocument({
-      url: "offscreen.html",
-      reasons: ["USER_MEDIA", "AUDIO_PLAYBACK"],
-      justification: "Microphone capture and WebRTC connections for the team voice channel."
-    });
-  }
-  try {
-    await creating;
-  } finally {
-    creating = null;
-  }
-}
-
-function pushError(code) {
-  lastStatus = Object.assign({}, lastStatus, { connected: false, error: code });
-  chrome.runtime.sendMessage({ cmd: "status", status: lastStatus }, () => chrome.runtime.lastError);
-  updateIcon(lastStatus);
-}
-
-function toOffscreen(cmd, extra) {
-  chrome.runtime.sendMessage(
-    Object.assign({ target: "offscreen", cmd }, extra || {}),
-    () => chrome.runtime.lastError
-  );
-}
 
 const TEAMS_URLS = [
   "https://teams.microsoft.com/*",
@@ -108,68 +107,162 @@ const TEAMS_URLS = [
   "https://teams.cloud.microsoft/*"
 ];
 
-function syncMuteState() {
-  chrome.tabs.query({ url: TEAMS_URLS }, (tabs) => {
-    if (chrome.runtime.lastError || !tabs) return;
-    for (const tab of tabs) {
-      chrome.tabs.sendMessage(tab.id, { cmd: "requestMuteState" }, () => chrome.runtime.lastError);
-    }
-  });
+async function findTeamsTab() {
+  const active = await api.tabs.query({ url: TEAMS_URLS, active: true, currentWindow: true });
+  if (active && active.length) return active[0].id;
+  const any = await api.tabs.query({ url: TEAMS_URLS });
+  if (any && any.length) return any[0].id;
+  return null;
 }
 
-chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+async function ensureMediaHost() {
+  if (HAS_OFFSCREEN) {
+    const has = await api.offscreen.hasDocument();
+    if (has) return;
+    if (!creating) {
+      creating = api.offscreen.createDocument({
+        url: "offscreen.html",
+        reasons: ["USER_MEDIA", "AUDIO_PLAYBACK"],
+        justification: "Microphone capture and WebRTC connections for the team voice channel."
+      });
+    }
+    try {
+      await creating;
+    } finally {
+      creating = null;
+    }
+    return;
+  }
+
+  const tabId = await findTeamsTab();
+  if (tabId === null) throw new Error("noTeamsTab");
+  await api.tabs.sendMessage(tabId, { target: "media", cmd: "ping" }, { frameId: 0 });
+  mediaTabId = tabId;
+}
+
+function pushError(code) {
+  lastStatus = Object.assign({}, lastStatus, { connected: false, error: code });
+  apiSend({ cmd: "status", status: lastStatus });
+  updateIcon(lastStatus);
+}
+
+async function toMedia(cmd, extra) {
+  const msg = Object.assign({ target: "media", cmd }, extra || {});
+  if (HAS_OFFSCREEN) {
+    apiSend(msg);
+    return;
+  }
+  if (mediaTabId === null) {
+    try {
+      mediaTabId = await findTeamsTab();
+    } catch (e) {
+      return;
+    }
+  }
+  if (mediaTabId !== null) {
+    apiSendTab(mediaTabId, msg, { frameId: 0 });
+  }
+}
+
+function dropMediaHost() {
+  mediaTabId = null;
+  applyStatus({ connected: false, teamsMuted: false, transmitting: false, peers: [], error: "noTeamsTab" });
+  apiSend({ cmd: "status", status: lastStatus });
+}
+
+function syncMuteState() {
+  api.tabs
+    .query({ url: TEAMS_URLS })
+    .then((tabs) => {
+      for (const tab of tabs || []) {
+        apiSendTab(tab.id, { cmd: "requestMuteState" });
+      }
+    })
+    .catch(() => {});
+}
+
+api.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg || !msg.cmd) return;
 
   if (msg.cmd === "connect") {
-    ensureOffscreen()
+    pendingPayload = msg.payload;
+    ensureMediaHost()
       .then(() => {
-        toOffscreen("connect", { payload: msg.payload });
+        toMedia("prepare", { payload: msg.payload });
         syncMuteState();
       })
       .catch((e) => {
-        console.error("OffMic: offscreen document unavailable", e);
-        pushError("offscreenFailed");
+        console.error("OffMic: media context unavailable", e);
+        pushError(e && e.message === "noTeamsTab" ? "noTeamsTab" : "offscreenFailed");
       });
     sendResponse({ ok: true });
     return true;
   }
 
   if (msg.cmd === "disconnect") {
-    toOffscreen("disconnect");
+    pendingPayload = null;
+    if (!HAS_OFFSCREEN) signalClose();
+    toMedia("disconnect");
     sendResponse({ ok: true });
     return true;
   }
 
+  if (msg.cmd === "mediaReady") {
+    if (!HAS_OFFSCREEN && pendingPayload) signalOpen(pendingPayload, msg.peerId);
+    return;
+  }
+
+  if (msg.cmd === "signalOut") {
+    if (!HAS_OFFSCREEN) signalSend(msg.msg);
+    return;
+  }
+
   if (msg.cmd === "muteState") {
-    toOffscreen("muteState", { muted: msg.muted });
+    toMedia("muteState", { muted: msg.muted });
     return;
   }
 
   if (msg.cmd === "setListen") {
-    toOffscreen("setListen", { listen: msg.listen });
+    toMedia("setListen", { listen: msg.listen });
     return;
   }
 
   if (msg.cmd === "setAudio") {
-    toOffscreen("setAudio", { audio: msg.audio });
+    toMedia("setAudio", { audio: msg.audio });
     return;
   }
 
   if (msg.cmd === "setPeerAudio") {
-    toOffscreen("setPeerAudio", { peerId: msg.peerId, patch: msg.patch });
+    toMedia("setPeerAudio", { peerId: msg.peerId, patch: msg.patch });
     return;
   }
 
   if (msg.cmd === "getStatus") {
-    toOffscreen("getStatus");
+    toMedia("getStatus");
     syncMuteState();
     sendResponse(lastStatus);
     return true;
   }
 
   if (msg.cmd === "status") {
-    lastStatus = msg.status;
-    updateIcon(msg.status);
+    applyStatus(msg.status);
     return;
   }
 });
+
+if (!HAS_OFFSCREEN) {
+  offmicSignalHooks.message = (msg) => toMedia("signalIn", { msg });
+  offmicSignalHooks.link = (connected) => toMedia("link", { connected });
+  offmicSignalHooks.error = (code) => toMedia("fail", { code });
+
+  api.tabs.onRemoved.addListener((tabId) => {
+    if (tabId === mediaTabId && lastStatus && lastStatus.connected) dropMediaHost();
+    else if (tabId === mediaTabId) mediaTabId = null;
+  });
+
+  api.tabs.onUpdated.addListener((tabId, changeInfo) => {
+    if (tabId !== mediaTabId || changeInfo.status !== "loading") return;
+    if (lastStatus && lastStatus.connected) dropMediaHost();
+    else mediaTabId = null;
+  });
+}

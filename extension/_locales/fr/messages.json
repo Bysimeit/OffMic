@@ -176,6 +176,9 @@
   "errOffscreenFailed": {
     "message": "Erreur interne : le document micro n'a pas pu démarrer. Recharge l'extension."
   },
+  "errNoTeamsTab": {
+    "message": "OffMic a besoin que l'onglet de ta réunion Teams soit ouvert. Ouvre-le, puis reconnecte-toi."
+  },
   "errNoResponse": {
     "message": "Pas de réponse de l'extension. Recharge-la depuis chrome://extensions, puis réessaie."
   }

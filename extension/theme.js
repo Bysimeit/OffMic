@@ -10,7 +10,7 @@ function themeApply(preference) {
 }
 
 async function themeApplyPreferred() {
-  const data = await chrome.storage.local.get("settings");
+  const data = await api.storage.local.get("settings");
   const preference = data.settings && data.settings.theme;
   const resolved = themeResolve(preference);
   themeApply(resolved);
