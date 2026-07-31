@@ -5,11 +5,12 @@
 **A private voice channel for your team, during your Teams meetings.**
 
 [![Available in the Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Available-4f6bed.svg)](https://chromewebstore.google.com/detail/onacjipehnjfchieiakjlofndidcnkod)
-[![Manifest V3](https://img.shields.io/badge/Chrome-Manifest%20V3-4f6bed.svg)](https://developer.chrome.com/docs/extensions/develop/migrate)
+[![Available on Firefox Add-ons](https://img.shields.io/badge/Firefox%20Add--ons-Available-ff7139.svg)](https://addons.mozilla.org/firefox/addon/offmic/)
+[![Manifest V3](https://img.shields.io/badge/Manifest-V3-4f6bed.svg)](https://developer.chrome.com/docs/extensions/develop/migrate)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE)
 ![Version](https://img.shields.io/badge/version-0.1.0-green.svg)
 
-**[Install OffMic from the Chrome Web Store](https://chromewebstore.google.com/detail/onacjipehnjfchieiakjlofndidcnkod)**
+**[Install for Chrome](https://chromewebstore.google.com/detail/onacjipehnjfchieiakjlofndidcnkod)** &nbsp;·&nbsp; **[Install for Firefox](https://addons.mozilla.org/firefox/addon/offmic/)**
 
 </div>
 
@@ -61,15 +62,17 @@ Voice travels over **peer-to-peer WebRTC**, in a mesh. It never goes through a s
 
 ## Install
 
-### Chrome
+OffMic is published on both stores.
 
-OffMic is published on the Chrome Web Store:
+### Chrome
 
 **[chromewebstore.google.com/detail/onacjipehnjfchieiakjlofndidcnkod](https://chromewebstore.google.com/detail/onacjipehnjfchieiakjlofndidcnkod)**
 
 ### Firefox
 
-Firefox 115 or newer. The build is not on addons.mozilla.org yet, so grab `offmic-firefox.zip` from the [latest release](https://github.com/Bysimeit/OffMic/releases), unzip it, then open `about:debugging` → **This Firefox** → **Load Temporary Add-on** and pick the `manifest.json` inside. Being a temporary add-on, it goes away when you restart Firefox.
+Firefox 115 or newer.
+
+**[addons.mozilla.org/firefox/addon/offmic](https://addons.mozilla.org/firefox/addon/offmic/)**
 
 ### On Chrome, one permission step
 
@@ -98,13 +101,13 @@ Each teammate in the list also carries its own mic toggle and volume slider, so 
 
 ## Installation, if you want to host your own relay server
 
-None of this is needed to use OffMic. The Chrome Web Store build already points at a hosted relay, so installing it and joining a room is all it takes. Follow the steps below only if you would rather run the signaling for your team yourself.
+None of this is needed to use OffMic. The store builds already point at a hosted relay, so installing one and joining a room is all it takes. Follow the steps below only if you would rather run the signaling for your team yourself.
 
 Note that pointing at your own relay does not require a clone either: the address is editable straight from the popup, in the store build as much as in a local one.
 
 ### Requirements
 
-Node.js 18 or newer, and Chrome.
+Node.js 18 or newer, and Chrome or Firefox.
 
 ### 1. Clone
 
@@ -123,11 +126,11 @@ const OFFMIC_CONFIG = {
 };
 ```
 
-That value is only the **default** shown on a fresh Chrome profile. The address is editable in the popup at any time, and what you type there is remembered, so trying another relay never requires touching a file.
+That value is only the **default** shown on a fresh browser profile. The address is editable in the popup at any time, and what you type there is remembered, so trying another relay never requires touching a file.
 
 ### 2. Load the extension from source
 
-Skip this if you already installed a packaged build, it works the same against your own relay.
+Skip this if you already installed a store build, it works the same against your own relay.
 
 `extension/` holds one source tree and two manifests: `manifest.json` for Chrome, `manifest.firefox.json` for Firefox. The build script copies the tree into `dist/`, one folder per browser, with the right manifest in place:
 
@@ -148,9 +151,10 @@ On Chrome you can also load `extension/` directly, since its `manifest.json` is 
 
 1. Open `about:debugging` → **This Firefox**
 2. **Load Temporary Add-on**, then pick `dist/firefox/manifest.json`
-3. Open the popup and click the microphone permission link
 
-The last step matters on both: the audio runs in a context with no UI, so it cannot show a permission prompt. You have to grant access once from the dedicated page, otherwise capture fails with `NotAllowedError`.
+Being a temporary add-on, it goes away when you restart Firefox.
+
+The last Chrome step matters: the audio runs there in a context with no UI, so it cannot show a permission prompt. You have to grant access once from the dedicated page, otherwise capture fails with `NotAllowedError`. Firefox captures inside the Teams tab and has nothing to grant.
 
 ### 3. Run the signaling server
 
